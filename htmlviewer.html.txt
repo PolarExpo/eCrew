@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduler Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        input {
+            margin-right: 10px;
+            padding: 5px;
+        }
+        button {
+            padding: 5px 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scheduler Interface</h1>
+        <div class="card">
+            <h2>Add Schedule</h2>
+            <input type="text" id="scheduleLocation" placeholder="Location" />
+            <input type="text" id="scheduleTime" placeholder="Time" />
+            <button onclick="addSchedule()">Add Schedule</button>
+        </div>
+
+        <div class="card">
+            <h2>Send Notification</h2>
+            <input type="text" id="notificationMessage" placeholder="Message" />
+            <input type="text" id="notificationTime" placeholder="Time" />
+            <button onclick="sendNotification()">Send Notification</button>
+        </div>
+
+        <div class="card">
+            <h2>Schedules</h2>
+            <ul id="schedulesList"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSchedules();
+        });
+
+        function addSchedule() {
+            const location = document.getElementById('scheduleLocation').value;
+            const time = document.getElementById('scheduleTime').value;
+
+            if (location && time) {
+                const schedules = JSON.parse(localStorage.getItem('schedules')) || [];
+                schedules.push({ location, time });
+                localStorage.setItem('schedules', JSON.stringify(schedules));
+                document.getElementById('scheduleLocation').value = '';
+                document.getElementById('scheduleTime').value = '';
+                loadSchedules();
+            } else {
+                alert('Please enter both location and time.');
+            }
+        }
+
+        function sendNotification() {
+            const message = document.getElementById('notificationMessage').value;
+            const time = document.getElementById('notificationTime').value;
+
+            if (message && time) {
+                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+                notifications.push({ message, time });
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                document.getElementById('notificationMessage').value = '';
+                document.getElementById('notificationTime').value = '';
+                loadSchedules();  // Optional: refresh the schedule list
+            } else {
+                alert('Please enter both message and time.');
+            }
+        }
+
+        function loadSchedules() {
+            const schedules = JSON.parse(localStorage.getItem('schedules')) || [];
+            const schedulesList = document.getElementById('schedulesList');
+            schedulesList.innerHTML = schedules.map(schedule => 
+                `<li>${schedule.location} at ${schedule.time}</li>`
+            ).join('');
+        }
+    </script>
+</body>
+</html>
+
+
